@@ -45,7 +45,7 @@ function parseQuery(query) {
     let orderByFields = null;
     if (orderByMatch) {
         orderByFields = orderByMatch[1].split(',').map(field => {
-            const [fieldName, order] = field.trim().split(/\s+/);
+            let [fieldName, order] = field.trim().split(/\s+/);
             return { fieldName, order: order ? order.toUpperCase() : 'ASC' };
         });
         query = query.replace(orderByRegex, '');

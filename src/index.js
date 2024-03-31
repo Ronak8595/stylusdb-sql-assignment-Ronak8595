@@ -269,9 +269,8 @@ async function executeSELECTQuery(query) {
             groupResults = applyGroupBy(filteredData, groupByFields, fields);
 
             // Order them by the specified fields
-            let orderedResults = groupResults;
             if (orderByFields) {
-                orderedResults = groupResults.sort((a, b) => {
+                groupResults.sort((a, b) => {
                     for (let { fieldName, order } of orderByFields) {
                         if (a[fieldName] < b[fieldName]) return order === 'ASC' ? -1 : 1;
                         if (a[fieldName] > b[fieldName]) return order === 'ASC' ? 1 : -1;
@@ -279,6 +278,8 @@ async function executeSELECTQuery(query) {
                     return 0;
                 });
             }
+            
+            
             if (limit !== null) {
                 groupResults = groupResults.slice(0, limit);
             }
