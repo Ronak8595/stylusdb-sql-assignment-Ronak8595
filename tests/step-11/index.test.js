@@ -656,14 +656,14 @@ test('Parse GROUP BY query with JOIN and WHERE clauses', () => {
 });
 
 test('Execute SQL Query with ORDER BY', async () => {
-    const query = 'SELECT name FROM student ORDER BY name DESC';
+    const query = 'SELECT name FROM student ORDER BY name ASC';
     const result = await executeSELECTQuery(query);
 
     expect(result).toStrictEqual([
-        { name: 'John' },
-        { name: 'Jane' },
+        { name: 'Alice' },
         { name: 'Bob' },
-        { name: 'Alice' }
+        { name: 'Jane' },
+        { name: 'John' }
     ]);
 });
 

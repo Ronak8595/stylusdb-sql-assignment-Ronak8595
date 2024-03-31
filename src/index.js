@@ -285,16 +285,33 @@ async function executeSELECTQuery(query) {
             }
             return groupResults;
         }
-    
-    // Select the specified fields
-    return filteredData.map(row => {
-        const selectedRow = {};
-        fields.forEach(field => {
-            // Assuming 'field' is just the column name without table prefix
-            selectedRow[field] = row[field];
-        });
-        return selectedRow;
-    });
+        else {
+
+            // Order them by the specified fields
+            let orderedResults = groupResults;
+            if (orderByFields) {
+                orderedResults = groupResults.sort((a, b) => {
+                    for (let { fieldName, order } of orderByFields) {
+                        if (a[fieldName] < b[fieldName]) return order === 'ASC' ? -1 : 1;
+                        if (a[fieldName] > b[fieldName]) return order === 'ASC' ? 1 : -1;
+                    }
+                    return 0;
+                });
+            }
+            let finalResult =  orderedResults.map(row => {
+                const selectedRow = {};
+                fields.forEach(field => {
+                    // Assuming 'field' is just the column name without table prefix
+                    selectedRow[field] = row[field];
+                });
+                return selectedRow;
+            });
+            if (limit !== null) {
+                finalResult = finalResult.slice(0, limit);
+            }
+
+            return finalResult;
+        }
 }
 
 module.exports = executeSELECTQuery;
