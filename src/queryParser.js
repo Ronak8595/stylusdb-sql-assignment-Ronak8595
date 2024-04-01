@@ -30,6 +30,11 @@ function parseQuery(query) {
         // Initialize variables for different parts of the query
         let selectPart, fromPart;
 
+        let isDistinct = false; // Global DISTINCT, not within COUNT
+        if (query.toUpperCase().includes('SELECT DISTINCT')) {
+            isDistinct = true;
+            query = query.replace('SELECT DISTINCT', 'SELECT');
+        }
         // Updated regex to capture LIMIT clause and remove it for further processing
         const limitRegex = /\sLIMIT\s(\d+)/i;
         const limitMatch = query.match(limitRegex);
@@ -115,7 +120,8 @@ function parseQuery(query) {
             groupByFields,
             hasAggregateWithoutGroupBy,
             orderByFields,
-            limit
+            limit,
+            isDistinct
         };
     } catch(error) {
         // Customize error message or log details if needed
@@ -132,7 +138,11 @@ function parseWhereClause(whereString) {
     const conditionRegex = /(.*?)(=|!=|>|<|>=|<=)(.*)/;
     return whereString.split(/ AND | OR /i).map(conditionString => {
         const match = conditionString.match(conditionRegex);
-        if (match) {
+        if (conditionString.includes(' LIKE ')) {
+            const [field, pattern] = conditionString.split(/\sLIKE\s/i);
+            return { field: field.trim(), operator: 'LIKE', value: pattern.trim().replace(/^'(.*)'$/, '$1') };
+        } 
+        else if(match) {
             const [, field, operator, value] = match;
             return { field: field.trim(), operator, value: value.trim() };
         }

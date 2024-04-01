@@ -208,7 +208,7 @@ function applyGroupBy(data, groupByFields, aggregateFunctions) {
 async function executeSELECTQuery(query) {
     try{
         // Now we will have joinTable, joinCondition in the parsed query
-        const { fields, table, whereClauses, joinType, joinTable, joinCondition, groupByFields, hasAggregateWithoutGroupBy, orderByFields, limit } = parseQuery(query);
+        const { fields, table, whereClauses, joinType, joinTable, joinCondition, groupByFields, hasAggregateWithoutGroupBy, orderByFields, limit, isDistinct } = parseQuery(query);
         let data = await readCSV(`${table}.csv`);
 
         // Logic for applying JOINs
@@ -307,6 +307,11 @@ async function executeSELECTQuery(query) {
                     });
                     return selectedRow;
                 });
+                // Remove duplicates if specified
+                if (isDistinct) {
+                    finalResult = [...new Map(finalResult.map(item => [fields.map(field => item[field]).join('|'), item])).values()];
+                }
+
                 if (limit !== null) {
                     finalResult = finalResult.slice(0, limit);
                 }

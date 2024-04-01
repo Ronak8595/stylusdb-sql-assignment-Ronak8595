@@ -24,6 +24,7 @@ test('Parse SQL Query', () => {
         hasAggregateWithoutGroupBy: false,
         limit: null,
         orderByFields: null,
+        isDistinct: false
     });
 });
 
@@ -55,6 +56,7 @@ test('Parse SQL Query with WHERE Clause', () => {
         hasAggregateWithoutGroupBy: false,
         limit: null,
         orderByFields: null,
+        isDistinct: false
     });
 });
 
@@ -89,6 +91,7 @@ test('Parse SQL Query with Multiple WHERE Clauses', () => {
         hasAggregateWithoutGroupBy: false,
         limit: null,
         orderByFields: null,
+        isDistinct: false
     });
 });
 
@@ -127,6 +130,7 @@ test('Parse SQL Query with INNER JOIN', async () => {
         hasAggregateWithoutGroupBy: false,
         limit: null,
         orderByFields: null,
+        isDistinct: false
     })
 });
 
@@ -144,6 +148,7 @@ test('Parse SQL Query with INNER JOIN and WHERE Clause', async () => {
         hasAggregateWithoutGroupBy: false,
         limit: null,
         orderByFields: null,
+        isDistinct: false
     })
 });
 
